@@ -36,6 +36,7 @@
 - 용어 기초: 모델은 y=f(x) 형태의 수학 방정식이며, LLM은 '답변 = f(질문)'인 수학 함수. 딥러닝은 사람 두뇌에서 힌트를 얻은 모델 제작 방식이고 현대 LLM은 딥러닝으로 만들어진다.
 - 발전 단계: **2012 AlexNet**(제프리 힌튼 팀, GPU+딥러닝으로 ImageNet 우승, 후에 노벨상) → **~2022 Perception AI**(알파고 vs 이세돌 2016, Google Transformer 논문 2017으로 Transformer 인기 폭발) → **2022~ Generative AI**(GPT = Generative·Pre-trained·Transformer, GPT2에서 데이터 10배 → 문장 생성, GPT3에서 100배 → 대화 가능, GPT-3.5부터 ChatGPT 사업화, GPT-4에서 이미지·음성·동영상까지 다루는 멀티모달) → **2024~ Agentic AI**(LLM에 Tool을 연동해 예약, 회의록 파일 저장, SMS/이메일 발송 등 Action을 LLM이 대신 수행 = Agent. Coding Agent 등장으로 개발자 채용 감소 시작) → **2025~ Physical AI**(LLM이 모터 제어 Tool로 움직임 제어 + 강화학습 기반 걷기 학습).
 - 2026년 현재/미래는 '효율화 싸움': 에너지·HW 전쟁이 극대화되며 '에너지 대비 뽑아낼 수 있는 AI 성능'이 새 지표로 자리 잡음.
+- **[이미지 확인]** p30 슬라이드에는 젠슨 황 CES 발표 실제 사진이 삽입되어 있음 — 사진 속 대형 화면에 상승 곡선 위 5단계 라벨이 표시됨: 2012 AlexNet(하단) → Perception AI → **GENERATIVE AI**(빨간 사각형으로 강조, 현재 젠슨 황이 가리키는 위치) → Agentic AI → Physical AI(최상단). 사진 아래에는 별도로 ChatGPT 대화창 UI 스크린샷("준비되면 얘기해 주세요.")이 배치되어 생성형 AI 시대의 대표 사례로 제시됨.
 
 ### Unit 6. 필수 AI Top 4 툴
 
