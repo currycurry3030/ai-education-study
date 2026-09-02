@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-line AI 비전 검사 및 자동 제어 시스템 인터랙티브 보고서</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        swir: {
+                            400: '#a855f7',
+                            500: '#9333ea',
+                            900: '#3b0764'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        /* Scan Line Animation */
+        @keyframes scanline {
+            0% { top: 0%; opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0.8; }
+        }
+        .scan-line {
+            animation: scanline 3s linear infinite;
+        }
+        /* Pulse Animation */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.08); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-effect {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/20">
+                    <i class="fa-solid fa-microchip text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+                        In-line AI 비전 검사 & 자동 제어
+                    </h1>
+                    <p class="text-xs text-sky-400 font-medium">스마트 팩토리 품질 혁신 웹보고서</p>
+                </div>
+            </div>
+            
+            <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+                <a href="#overview" class="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">추진 배경</a>
+                <a href="#simulator" class="px-3 py-2 text-sky-400 hover:bg-sky-950/50 rounded-lg transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-camera-retro"></i> 광학 시뮬레이터
+                </a>
+                <a href="#ai-pipeline" class="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">AI 알고리즘</a>
+                <a href="#control-logic" class="px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">Closed-Loop 제어</a>
+                <a href="#roi-calculator" class="px-3 py-2 text-emerald-400 hover:bg-emerald-950/50 rounded-lg transition-colors">수율 ROI 분석</a>
+            </nav>
+
+            <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-ping"></span> Live Demo
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- HERO & EXECUTIVE SUMMARY -->
+        <section id="overview" class="relative rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border border-slate-700/60 p-8 sm:p-10 shadow-2xl overflow-hidden">
+            <div class="absolute -right-20 -top-20 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-7 space-y-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-400/30 text-sky-300 text-xs font-semibold">
+                        <i class="fa-solid fa-atom"></i> 반도체 세정 공정 연계 수율 극대화
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+                        세정 직후 10초 이내,<br>
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-indigo-300 to-purple-400">
+                            미세 불량 검출 및 자동 Rework 연동
+                        </span>
+                    </h2>
+                    <p class="text-slate-300 text-base leading-relaxed">
+                        기존 샘플링 검사의 한계를 극복하고, EFEM 핸들링 구간을 활용하여 **100% In-line 실시간 전수 검사**를 구현합니다. 가시광선(RGB)과 단파장 적외선(SWIR) 듀얼 광학 센서로 미세 이물과 투명 수분 얼룩(Stain)을 동시에 포착합니다.
+                    </p>
+                    
+                    <div class="grid grid-cols-3 gap-4 pt-4 border-t border-slate-700/60">
+                        <div>
+                            <div class="text-xs text-slate-400">검사 적용율</div>
+                            <div class="text-xl font-extrabold text-sky-400">100% 전수</div>
+                            <div class="text-[11px] text-slate-500">샘플링의 불량 유출 차단</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-400">광학계 구성</div>
+                            <div class="text-xl font-extrabold text-purple-400">RGB + SWIR</div>
+                            <div class="text-[11px] text-slate-500">수분막 & 미세 결함 동시 탐지</div>
+                        </div>
+                        <div>
+                            <div class="text-xs text-slate-400">제어 반응 속도</div>
+                            <div class="text-xl font-extrabold text-emerald-400">&lt; 10 sec</div>
+                            <div class="text-[11px] text-slate-500">골든 타임 내 Rework 유턴</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problem vs Solution Flow graphic -->
+                <div class="lg:col-span-5 bg-slate-950/80 rounded-xl p-6 border border-slate-800 space-y-4">
+                    <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider flex items-center justify-between">
+                        <span>AS-IS vs TO-BE 비교</span>
+                        <span class="text-xs font-normal text-slate-400">프로세스 차이</span>
+                    </h3>
+                    
+                    <!-- AS-IS -->
+                    <div class="p-3.5 rounded-lg bg-red-950/20 border border-red-900/40 space-y-2">
+                        <div class="flex items-center justify-between text-xs font-bold text-red-400">
+                            <span><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> AS-IS : 기존 오프라인 샘플링</span>
+                            <span class="bg-red-500/20 px-2 py-0.5 rounded text-[10px]">불량 전파 위험</span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-snug">
+                            세정 → FOUP 적재 → OHT 이송 → 오프라인 AOI (샘플링) → <span class="text-red-400 font-semibold">뒤늦은 Scrap 발생 & 타 장비 오염</span>
+                        </p>
+                    </div>
+
+                    <!-- TO-BE -->
+                    <div class="p-3.5 rounded-lg bg-emerald-950/20 border border-emerald-800/40 space-y-2">
+                        <div class="flex items-center justify-between text-xs font-bold text-emerald-400">
+                            <span><i class="fa-solid fa-circle-check mr-1.5"></i> TO-BE : In-line 실시간 인터락</span>
+                            <span class="bg-emerald-500/20 px-2 py-0.5 rounded text-[10px]">수율 100% 보호</span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-snug">
+                            세정 → **EFEM In-line AI 스캔 (10초)** → PASS/REWORK/SCRAP 자동 판단 → <span class="text-emerald-400 font-semibold">즉시 Re-clean 포트 유턴</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- KEY FEATURE 1: INTERACTIVE OPTICAL CAMERA SIMULATOR (USER DEMAND) -->
+        <section id="simulator" class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-4">
+                <div>
+                    <div class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-400 uppercase tracking-widest mb-1">
+                        <i class="fa-solid fa-sliders"></i> Interactive Optical Simulator
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">
+                        [핵심 시뮬레이터] 듀얼 카메라 동작 및 결함 탐지 체험
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-1">
+                        아래 버튼과 제어 슬라이더를 통해 가시광선(RGB)과 단파장 적외선(SWIR) 파장대의 검출 메커니즘 차이를 확인하세요.
+                    </p>
+                </div>
+
+                <!-- Mode Toggles -->
+                <div class="flex flex-wrap items-center gap-2 bg-slate-900 p-1.5 rounded-xl border border-slate-800">
+                    <button id="btn-mode-rgb" onclick="setInspectionMode('rgb')" class="px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-sky-600 text-white shadow-lg shadow-sky-600/30">
+                        <i class="fa-solid fa-camera"></i> RGB 비전 카메라
+                    </button>
+                    <button id="btn-mode-swir" onclick="setInspectionMode('swir')" class="px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+                        <i class="fa-solid fa-eye"></i> SWIR 적외선 (1450nm)
+                    </button>
+                    <button id="btn-mode-ai" onclick="setInspectionMode('ai')" class="px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800">
+                        <i class="fa-solid fa-brain"></i> AI 융합 레이어
+                    </button>
+                </div>
+            </div>
+
+            <!-- SIMULATOR MAIN BOARD -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Left: Wafer Canvas Display (7 cols) -->
+                <div class="lg:col-span-7 bg-slate-900 rounded-2xl border border-slate-800 p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-xl">
+                    
+                    <!-- Scan Status Badge -->
+                    <div class="w-full flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <span id="simulator-mode-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30">
+                                RGB VISIBLE SPECTRUM
+                            </span>
+                            <span class="text-xs text-slate-400 code-font" id="wafer-id-tag">WAFER_ID: W2026-0810-042</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="toggleScanAnimation()" id="scan-toggle-btn" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-lg text-slate-200 border border-slate-700 transition-colors flex items-center gap-1.5">
+                                <i class="fa-solid fa-play text-emerald-400"></i> 라인스캔 동작
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Wafer Inspection Canvas Wrapper -->
+                    <div class="relative w-72 h-72 sm:w-96 sm:h-96 rounded-full border-4 border-slate-700/80 bg-slate-950 flex items-center justify-center shadow-2xl transition-all duration-500" id="wafer-container">
+                        
+                        <!-- Wafer Grid / Silicon Pattern -->
+                        <div class="absolute inset-0 rounded-full opacity-30 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none"></div>
+
+                        <!-- Scan Line Overlay -->
+                        <div id="scan-line-element" class="hidden absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent scan-line shadow-[0_0_15px_#22d3ee] z-20 pointer-events-none"></div>
+
+                        <!-- Dynamic Wafer Image Render (SVG / Dynamic Elements) -->
+                        <div id="wafer-surface" class="relative w-full h-full rounded-full overflow-hidden transition-all duration-500">
+                            <!-- Background color dynamically updated based on RGB vs SWIR -->
+                            <div id="wafer-bg" class="w-full h-full bg-slate-800 transition-colors duration-500 flex items-center justify-center">
+                                
+                                <!-- Center Chip Grid Pattern -->
+                                <div class="w-4/5 h-4/5 grid grid-cols-6 grid-rows-6 gap-1 opacity-20 pointer-events-none">
+                                    <template id="grid-cell">
+                                        <div class="border border-slate-400/30"></div>
+                                    </template>
+                                </div>
+
+                                <!-- DEFECT ITEM 1: Surface Micro Crack (Visible in RGB, Subtle in SWIR) -->
+                                <div id="defect-crack" onclick="selectDefect('crack')" class="absolute top-[28%] left-[32%] w-16 h-8 cursor-pointer transition-all hover:scale-110 z-10 group" title="클릭하여 결함 분석">
+                                    <!-- RGB render: Red Crack line -->
+                                    <svg class="w-full h-full defect-rgb-el" viewBox="0 0 100 50">
+                                        <path d="M10 20 L35 15 L50 35 L75 25 L90 40" stroke="#ef4444" stroke-width="3" fill="none" stroke-dasharray="2 1"/>
+                                    </svg>
+                                    <!-- SWIR render: Faint trace -->
+                                    <svg class="w-full h-full defect-swir-el hidden" viewBox="0 0 100 50">
+                                        <path d="M10 20 L35 15 L50 35 L75 25 L90 40" stroke="#64748b" stroke-width="1.5" fill="none"/>
+                                    </svg>
+                                    <!-- AI Box overlay -->
+                                    <div class="defect-ai-box hidden absolute -inset-1 border-2 border-red-500 bg-red-500/10 rounded animate-pulse">
+                                        <span class="absolute -top-5 left-0 bg-red-600 text-[10px] font-bold text-white px-1.5 py-0.5 rounded">Crack (98%)</span>
+                                    </div>
+                                </div>
+
+                                <!-- DEFECT ITEM 2: Water Stain / Water Mark (Invisible/Faint in RGB, DARK ABSORPTION SPOT in SWIR) -->
+                                <div id="defect-stain" onclick="selectDefect('stain')" class="absolute bottom-[30%] right-[28%] w-20 h-20 cursor-pointer transition-all hover:scale-110 z-10 group" title="클릭하여 결함 분석">
+                                    <!-- RGB render: Very faint light blue mark (Hard to see) -->
+                                    <div class="defect-rgb-el w-full h-full rounded-full bg-cyan-200/10 border border-cyan-300/20 blur-[1px]"></div>
+                                    <!-- SWIR render: Deep Absorptive Dark Spot (Water absorbs 1450nm wavelength) -->
+                                    <div class="defect-swir-el hidden w-full h-full rounded-full bg-purple-950/90 border-2 border-purple-500 shadow-[0_0_20px_rgba(168,85,247,0.8)] flex items-center justify-center">
+                                        <span class="text-[10px] font-bold text-purple-300 code-font">1450nm ABS</span>
+                                    </div>
+                                    <!-- AI Box overlay -->
+                                    <div class="defect-ai-box hidden absolute -inset-2 border-2 border-purple-400 bg-purple-500/20 rounded-full animate-pulse">
+                                        <span class="absolute -top-5 left-2 bg-purple-600 text-[10px] font-bold text-white px-1.5 py-0.5 rounded">H2O Stain (99.2%)</span>
+                                    </div>
+                                </div>
+
+                                <!-- DEFECT ITEM 3: Particle Dust (Visible in both) -->
+                                <div id="defect-particle" onclick="selectDefect('particle')" class="absolute top-[60%] left-[22%] w-6 h-6 cursor-pointer transition-all hover:scale-110 z-10 group" title="클릭하여 결함 분석">
+                                    <div class="defect-rgb-el w-full h-full rounded-full bg-amber-400 shadow-[0_0_8px_#fbbf24]"></div>
+                                    <div class="defect-swir-el hidden w-full h-full rounded-full bg-slate-300 border border-slate-400"></div>
+                                    <div class="defect-ai-box hidden absolute -inset-2 border-2 border-amber-400 bg-amber-500/20 rounded animate-pulse">
+                                        <span class="absolute -top-5 left-0 bg-amber-600 text-[10px] font-bold text-white px-1.5 py-0.5 rounded">Particle (94%)</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Slider Controls -->
+                    <div class="w-full mt-6 space-y-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800">
+                        <div class="flex items-center justify-between text-xs text-slate-300">
+                            <span class="font-semibold"><i class="fa-solid fa-sliders text-sky-400 mr-1"></i> 조명/파장 대역 조정 (Wavelength Intensity)</span>
+                            <span class="code-font text-sky-400" id="slider-val-text">1450nm Bandpass Filter</span>
+                        </div>
+                        <input type="range" id="optical-slider" min="0" max="100" value="50" oninput="updateOpticalFilter(this.value)" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500">
+                        <div class="flex justify-between text-[10px] text-slate-500">
+                            <span>400nm (Visible)</span>
+                            <span>900nm (Near IR)</span>
+                            <span class="text-purple-400 font-bold">1450nm (OH Absorption)</span>
+                            <span>1700nm (SWIR Peak)</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right: Defect Inspection & Explanation Panel (5 cols) -->
+                <div class="lg:col-span-5 space-y-4">
+                    
+                    <!-- Selected Defect Detail Card -->
+                    <div class="bg-slate-900 rounded-2xl border border-slate-800 p-6 shadow-xl space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-microscope text-sky-400"></i> 결함 실시간 분석 데이터
+                            </h3>
+                            <span id="defect-status-tag" class="px-2.5 py-0.5 rounded text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                SWIR 감지 우수
+                            </span>
+                        </div>
+
+                        <!-- Defect Description Box -->
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-xs text-slate-400">선택된 결함 유형</label>
+                                <div class="text-lg font-bold text-white flex items-center gap-2" id="defect-title">
+                                    <i class="fa-solid fa-droplet text-purple-400"></i> 잔류 수분 (Water Stain)
+                                </div>
+                            </div>
+
+                            <p class="text-xs text-slate-300 leading-relaxed bg-slate-950 p-3 rounded-lg border border-slate-800" id="defect-desc">
+                                세정 공정 후 건조 미흡으로 발생하는 미세 수분막입니다. **가시광선(RGB) 검사에서는 거의 투명하게 보여 놓치기 쉬우나, SWIR 적외선 1450nm 영역에서는 물의 높은 광 흡수율로 인해 선명한 암점(Dark Spot)으로 감지**됩니다.
+                            </p>
+
+                            <!-- Optical Comparison Specs -->
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div class="p-2.5 bg-slate-800/60 rounded-lg border border-slate-700/50">
+                                    <div class="text-slate-400 text-[11px]">RGB 카메라 식별율</div>
+                                    <div class="text-sm font-bold text-red-400" id="rgb-detection-rate">12% (탐지 불가)</div>
+                                </div>
+                                <div class="p-2.5 bg-slate-800/60 rounded-lg border border-slate-700/50">
+                                    <div class="text-slate-400 text-[11px]">SWIR 카메라 식별율</div>
+                                    <div class="text-sm font-bold text-emerald-400" id="swir-detection-rate">99.8% (선명한 암점)</div>
+                                </div>
+                            </div>
+
+                            <!-- Automatic Action Trigger -->
+                            <div class="p-3 bg-amber-950/20 border border-amber-900/40 rounded-lg flex items-center justify-between">
+                                <div class="text-xs">
+                                    <span class="text-slate-400">자동 제어 트리거:</span>
+                                    <span class="text-amber-400 font-bold ml-1" id="trigger-action-text">REWORK (재세정 유턴)</span>
+                                </div>
+                                <span class="px-2 py-0.5 bg-amber-500/20 text-amber-300 text-[10px] font-bold rounded">
+                                    골든 타임 구제
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dual Camera Optics Comparison Info -->
+                    <div class="bg-slate-900 rounded-2xl border border-slate-800 p-5 space-y-3">
+                        <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                            <i class="fa-solid fa-layer-group text-purple-400"></i> 광학계 센싱 2원화 특징
+                        </h4>
+                        
+                        <div class="space-y-2 text-xs">
+                            <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+                                <div class="w-6 h-6 rounded bg-sky-500/20 text-sky-400 flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-camera"></i>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-sky-300">초고해상도 RGB 비전</span>
+                                    <p class="text-slate-400 text-[11px]">Bright-field / Dark-field 기법으로 물리적 균열(Crack), 스크래치, 이물 입자를 선명하게 촬영.</p>
+                                </div>
+                            </div>
+
+                            <div class="p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex items-start gap-2.5">
+                                <div class="w-6 h-6 rounded bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0 mt-0.5">
+                                    <i class="fa-solid fa-eye"></i>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-purple-300">SWIR 적외선 (900~1700nm)</span>
+                                    <p class="text-slate-400 text-[11px]">물 분자(OH기) 흡수 대역을 이용해 실리콘 투과 및 비가시 잔류 수분(Stain)을 정밀 검출.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- KEY FEATURE 2: 2-STAGE AI PIPELINE -->
+        <section id="ai-pipeline" class="bg-slate-900 rounded-2xl border border-slate-800 p-6 sm:p-8 space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-4">
+                <div>
+                    <div class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-400 uppercase tracking-widest mb-1">
+                        <i class="fa-solid fa-brain"></i> Cold-Start Free Strategy
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">
+                        2단계 AI 파이프라인 (비지도 학습 → 지도 학습 정밀 분류)
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-1">
+                        신규 공정 도입 초기 불량 데이터 부재(Cold-Start) 문제를 극복하고 단계적으로 알고리즘을 고도화합니다.
+                    </p>
+                </div>
+
+                <!-- Stage Toggle -->
+                <div class="flex items-center gap-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800">
+                    <button id="btn-stage-1" onclick="setAiStage(1)" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white">
+                        1단계: 비지도 Anomaly Detection
+                    </button>
+                    <button id="btn-stage-2" onclick="setAiStage(2)" class="px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white">
+                        2단계: 지도 학습 Multi-Class 분류
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pipeline Visual Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Stage 1 Card -->
+                <div id="ai-card-stage1" class="p-5 rounded-xl bg-slate-950 border-2 border-indigo-500/80 transition-all space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded bg-indigo-500/20 text-indigo-300 text-xs font-bold">1단계 (초기)</span>
+                        <i class="fa-solid fa-shield-halved text-indigo-400 text-lg"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white">비지도 학습 이상 감지</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        정상 웨이퍼 표면 패턴만 학습한 뒤, 정상 범위에서 벗어난 변형 및 비정상 영역을 즉시 **Anomalous ROI**로 추출합니다. (불량 라벨 데이터 불필요)
+                    </p>
+                    <div class="pt-2 border-t border-slate-800 text-[11px] text-indigo-400 font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-check"></i> Cold-Start 즉시 현장 투입 가능
+                    </div>
+                </div>
+
+                <!-- Stage 2 Card -->
+                <div id="ai-card-stage2" class="p-5 rounded-xl bg-slate-950 border border-slate-800 opacity-60 transition-all space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded bg-purple-500/20 text-purple-300 text-xs font-bold">2단계 (고도화)</span>
+                        <i class="fa-solid fa-diagram-project text-purple-400 text-lg"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white">지도 학습 정밀 다중 분류</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        운영 중 축적된 결함 데이터를 기반으로 **Stain, Particle, Crack** 등의 원인별 다중 클래스(Multi-class) 정밀 분류 모델로 자동 전환합니다.
+                    </p>
+                    <div class="pt-2 border-t border-slate-800 text-[11px] text-purple-400 font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-bolt"></i> Rework vs Scrap 정밀 판단
+                    </div>
+                </div>
+
+                <!-- Edge Hardware Accelerator Card -->
+                <div class="p-5 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="px-2.5 py-1 rounded bg-cyan-500/20 text-cyan-300 text-xs font-bold">전처리 가속</span>
+                        <i class="fa-solid fa-microchip text-cyan-400 text-lg"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-white">Edge 컴퓨팅 하드웨어 가속</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        카메라 이미지 수신과 동시에 FPGA/GPU 단에서 **Flat-field 보정 및 Shading 보정**을 하드웨어 레벨에서 초고속 수행하여 AI 추론 안정성을 확보합니다.
+                    </p>
+                    <div class="pt-2 border-t border-slate-800 text-[11px] text-cyan-400 font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-gauge-high"></i> Low-Latency 이미지 가공
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- KEY FEATURE 3: CLOSED-LOOP CONTROL FLOW -->
+        <section id="control-logic" class="space-y-6">
+            <div class="border-b border-slate-800 pb-4">
+                <div class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1">
+                    <i class="fa-solid fa-network-wired"></i> SECS/GEM Closed-Loop Interlock
+                </div>
+                <h2 class="text-2xl font-bold text-white">
+                    SECS/GEM 연동 자동 제어 프로세스 (Pass / Rework / Scrap)
+                </h2>
+                <p class="text-slate-400 text-sm mt-1">
+                    검사 판정 결과는 실시간 통신 인터페이스를 통해 EFEM 로봇과 OHT, 상위 MES 시스템으로 즉각 피드백됩니다.
+                </p>
+            </div>
+
+            <!-- Interactive Decision Tree / Flow -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- PASS NODE -->
+                <div class="bg-slate-900 rounded-2xl border-t-4 border-t-emerald-500 border-x border-b border-slate-800 p-6 space-y-4 hover:border-emerald-500/50 transition-all">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl font-bold">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300">
+                            정상 (PASS)
+                        </span>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-white">후속 공정 정상 이송</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        표면 미세 결함 및 수분 잔류가 검출되지 않은 건전 웨이퍼입니다. FOUP 적재 후 OHT를 통해 포토/증착 공정으로 이송됩니다.
+                    </p>
+
+                    <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-2 text-xs">
+                        <div class="text-slate-400 font-semibold">제어 신호 (SECS/GEM)</div>
+                        <div class="code-font text-emerald-400 text-[11px]">S6F11 : Event_Pass_Inspection</div>
+                        <div class="text-slate-500 text-[11px]">→ EFEM Robot: FOUP Slot 적재 실행</div>
+                    </div>
+                </div>
+
+                <!-- REWORK NODE (KEY HIGHLIGHT) -->
+                <div class="bg-slate-900 rounded-2xl border-t-4 border-t-amber-500 border-x border-b border-slate-800 p-6 space-y-4 hover:border-amber-500/50 transition-all relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl font-bold">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300">
+                            재세정 (REWORK)
+                        </span>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-white">골든 타임 내 즉시 유턴</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        경미한 수분(Stain) 및 particle이 감지된 경우, **FOUP 적재를 중단하고 로봇 암이 웨이퍼를 Cleaning Re-clean 포트로 즉시 유턴**시켜 웨이퍼를 구제합니다.
+                    </p>
+
+                    <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-2 text-xs">
+                        <div class="text-slate-400 font-semibold">제어 신호 (SECS/GEM)</div>
+                        <div class="code-font text-amber-400 text-[11px]">S6F11 : Event_Rework_Triggered</div>
+                        <div class="text-slate-500 text-[11px]">→ EFEM Robot: Re-clean Chamber 반입</div>
+                    </div>
+                </div>
+
+                <!-- SCRAP NODE -->
+                <div class="bg-slate-900 rounded-2xl border-t-4 border-t-red-500 border-x border-b border-slate-800 p-6 space-y-4 hover:border-red-500/50 transition-all">
+                    <div class="flex items-center justify-between">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center text-2xl font-bold">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-red-500/20 text-red-300">
+                            격리/폐기 (SCRAP)
+                        </span>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-white">후속 장비 오염 차단</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        치명적인 Micro Crack 또는 심각한 표면 긁힘 발생 시 후속 노광 장비 오염 및 깨짐 사고를 방지하기 위해 EFEM 내 전용 Reject 버퍼 포트로 격리합니다.
+                    </p>
+
+                    <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-2 text-xs">
+                        <div class="text-slate-400 font-semibold">제어 신호 (SECS/GEM)</div>
+                        <div class="code-font text-red-400 text-[11px]">S6F11 : Event_Scrap_Isolate</div>
+                        <div class="text-slate-500 text-[11px]">→ EFEM Robot: Reject Buffer 포트 이동</div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- KEY FEATURE 4: INTERACTIVE YIELD & ROI CALCULATOR -->
+        <section id="roi-calculator" class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 rounded-2xl border border-slate-800 p-6 sm:p-8 space-y-6">
+            <div class="border-b border-slate-800 pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-400 uppercase tracking-widest mb-1">
+                        <i class="fa-solid fa-calculator"></i> Business Impact Simulation
+                    </div>
+                    <h2 class="text-2xl font-bold text-white">
+                        인터랙티브 수율 & ROI 효과 시뮬레이터
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-1">
+                        라인의 일일 웨이퍼 처리량과 Rework 구제율을 입력하여 예상되는 연간 비용 절감액을 계산하세요.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Sliders Panel (6 cols) -->
+                <div class="lg:col-span-6 space-y-5 bg-slate-950 p-6 rounded-xl border border-slate-800">
+                    
+                    <!-- Slider 1: Daily Throughput -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <label class="text-slate-300 font-semibold">일일 세정 웨이퍼 처리량 (Wafers / Day)</label>
+                            <span class="text-sky-400 font-bold code-font" id="val-throughput">3,000 매</span>
+                        </div>
+                        <input type="range" id="input-throughput" min="500" max="10000" step="500" value="3000" oninput="calculateROI()" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-sky-500">
+                    </div>
+
+                    <!-- Slider 2: Defect Rate -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <label class="text-slate-300 font-semibold">세정 후 미세 결함/수분 발생률 (%)</label>
+                            <span class="text-amber-400 font-bold code-font" id="val-defect-rate">1.5 %</span>
+                        </div>
+                        <input type="range" id="input-defect-rate" min="0.2" max="5.0" step="0.1" value="1.5" oninput="calculateROI()" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                    </div>
+
+                    <!-- Slider 3: Rework Recovery Rate -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-xs">
+                            <label class="text-slate-300 font-semibold">In-line Rework 구제 성공률 (%)</label>
+                            <span class="text-emerald-400 font-bold code-font" id="val-rework-rate">85 %</span>
+                        </div>
+                        <input type="range" id="input-rework-rate" min="50" max="98" step="1" value="85" oninput="calculateROI()" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                    </div>
+
+                    <div class="pt-3 border-t border-slate-800 text-[11px] text-slate-500">
+                        * 계산 기준: 웨이퍼 평균 단가 $1,200 기준, 연간 365일 가동 기준 산출
+                    </div>
+                </div>
+
+                <!-- Output Metrics Panel (6 cols) -->
+                <div class="lg:col-span-6 grid grid-cols-2 gap-4">
+                    
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-1">
+                        <div class="text-xs text-slate-400">연간 Rework 구제 웨이퍼</div>
+                        <div class="text-2xl font-extrabold text-sky-400 code-font" id="res-recovered-wafers">13,952 매</div>
+                        <div class="text-[11px] text-slate-500">Scrap 전환 방지 웨이퍼 수</div>
+                    </div>
+
+                    <div class="bg-slate-900 p-5 rounded-xl border border-slate-800 space-y-1">
+                        <div class="text-xs text-slate-400">추상적 수율 상승 효과</div>
+                        <div class="text-2xl font-extrabold text-emerald-400 code-font" id="res-yield-boost">+ 1.28 %p</div>
+                        <div class="text-[11px] text-slate-500">라인 전체 수율 개선 기여</div>
+                    </div>
+
+                    <div class="col-span-2 bg-gradient-to-r from-emerald-950/40 to-sky-950/40 p-6 rounded-xl border border-emerald-500/30 space-y-2">
+                        <div class="text-xs text-emerald-300 font-bold uppercase tracking-wider">
+                            <i class="fa-solid fa-sack-dollar mr-1"></i> 연간 예상 손실 절감액 (ROI)
+                        </div>
+                        <div class="text-3xl sm:text-4xl font-extrabold text-white code-font" id="res-cost-savings">
+                            $ 16,742,400 <span class="text-sm font-normal text-slate-400">(약 220억 원)</span>
+                        </div>
+                        <p class="text-xs text-slate-300">
+                            후속 공정 오염 방지 및 대량 Scrap 유출을 사전에 차단함으로써 확보되는 경제적 가치입니다.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p>스마트 팩토리 비전 제어 프로젝트 팀 | In-line AI Vision & Auto Control System Proposal Report</p>
+            <p class="text-[11px] text-slate-600">본 보고서는 웹 기반 인터랙티브 시뮬레이션을 포함하고 있습니다.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT SIMULATION LOGIC -->
+    <script>
+        // State Variables
+        let currentMode = 'rgb'; // 'rgb', 'swir', 'ai'
+        let currentDefect = 'stain'; // 'crack', 'stain', 'particle'
+        let isScanning = false;
+        let aiStage = 1;
+
+        // Defect Knowledge Database
+        const defectDB = {
+            stain: {
+                title: "잔류 수분 (Water Stain / Water Mark)",
+                desc: "세정 공정 후 건조 미흡으로 발생하는 미세 수분막입니다. 가시광선(RGB) 검사에서는 거의 투명하게 보여 놓치기 쉬우나, SWIR 적외선 1450nm 영역에서는 물의 높은 광 흡수율로 인해 선명한 암점(Dark Spot)으로 감지됩니다.",
+                rgbRate: "12% (식별 불가능)",
+                swirRate: "99.8% (선명한 암점)",
+                action: "REWORK (재세정 유턴)",
+                actionColor: "text-amber-400",
+                badge: "SWIR 감지 우수",
+                badgeStyle: "bg-purple-500/20 text-purple-300 border-purple-500/30",
+                icon: "fa-droplet text-purple-400"
+            },
+            crack: {
+                title: "표면 미세 균열 (Micro Crack)",
+                desc: "웨이퍼 이송 및 세정 노즐 압력 과정에서 발생하는 표면 물리적 균열입니다. RGB 가시광선의 Bright-field/Dark-field 조명 반응이 우수하여 에지 산란 특성으로 선명히 탐지됩니다.",
+                rgbRate: "98.5% (산란 반사 검출)",
+                swirRate: "45% (미세 가시성)",
+                action: "SCRAP (즉시 격리)",
+                actionColor: "text-red-400",
+                badge: "RGB 감지 우수",
+                badgeStyle: "bg-red-500/20 text-red-300 border-red-500/30",
+                icon: "fa-burst text-red-400"
+            },
+            particle: {
+                title: "미세 잔존 이물 (Particle Dust)",
+                desc: "세정액 잔여물 및 외외부 미세 입자입니다. 크기에 따라 RGB 및 SWIR 파장 영역 모두에서 산란 및 투화 반응을 보입니다.",
+                rgbRate: "92.0% (표면 탐지)",
+                swirRate: "88.0% (흡수 탐지)",
+                action: "REWORK (재세정 유턴)",
+                actionColor: "text-amber-400",
+                badge: "듀얼 감지 가능",
+                badgeStyle: "bg-sky-500/20 text-sky-300 border-sky-500/30",
+                icon: "fa-circle-dot text-amber-400"
+            }
+        };
+
+        // Set Inspection Mode (RGB / SWIR / AI Overlay)
+        function setInspectionMode(mode) {
+            currentMode = mode;
+            const bgEl = document.getElementById('wafer-bg');
+            const badgeEl = document.getElementById('simulator-mode-badge');
+            const sliderEl = document.getElementById('optical-slider');
+            const sliderText = document.getElementById('slider-val-text');
+
+            // Reset buttons style
+            document.getElementById('btn-mode-rgb').className = "px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800";
+            document.getElementById('btn-mode-swir').className = "px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800";
+            document.getElementById('btn-mode-ai').className = "px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800";
+
+            // Elements visibility
+            const rgbElements = document.querySelectorAll('.defect-rgb-el');
+            const swirElements = document.querySelectorAll('.defect-swir-el');
+            const aiBoxes = document.querySelectorAll('.defect-ai-box');
+
+            if (mode === 'rgb') {
+                document.getElementById('btn-mode-rgb').className = "px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-sky-600 text-white shadow-lg shadow-sky-600/30";
+                bgEl.className = "w-full h-full bg-slate-800 transition-colors duration-500 flex items-center justify-center";
+                badgeEl.innerText = "RGB VISIBLE SPECTRUM";
+                badgeEl.className = "px-3 py-1 rounded-full text-xs font-bold bg-sky-500/20 text-sky-400 border border-sky-500/30";
+                sliderEl.value = 10;
+                sliderText.innerText = "400~700nm Visible Spectrum";
+
+                rgbElements.forEach(el => el.classList.remove('hidden'));
+                swirElements.forEach(el => el.classList.add('hidden'));
+                aiBoxes.forEach(el => el.classList.add('hidden'));
+
+            } else if (mode === 'swir') {
+                document.getElementById('btn-mode-swir').className = "px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-purple-600 text-white shadow-lg shadow-purple-600/30";
+                bgEl.className = "w-full h-full bg-slate-900 transition-colors duration-500 flex items-center justify-center";
+                badgeEl.innerText = "SWIR INFRARED (1450nm ABSORPTION)";
+                badgeEl.className = "px-3 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30";
+                sliderEl.value = 75;
+                sliderText.innerText = "1450nm OH-Absorption Band";
+
+                rgbElements.forEach(el => el.classList.add('hidden'));
+                swirElements.forEach(el => el.classList.remove('hidden'));
+                aiBoxes.forEach(el => el.classList.add('hidden'));
+
+            } else if (mode === 'ai') {
+                document.getElementById('btn-mode-ai').className = "px-3.5 py-2 rounded-lg text-xs font-bold transition-all flex items-center gap-2 bg-indigo-600 text-white shadow-lg shadow-indigo-600/30";
+                bgEl.className = "w-full h-full bg-slate-950 transition-colors duration-500 flex items-center justify-center";
+                badgeEl.innerText = "AI FUSION OVERLAY";
+                badgeEl.className = "px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
+                sliderEl.value = 50;
+                sliderText.innerText = "Multi-Spectrum AI Fusion Layer";
+
+                rgbElements.forEach(el => el.classList.remove('hidden'));
+                swirElements.forEach(el => el.classList.remove('hidden'));
+                aiBoxes.forEach(el => el.classList.remove('hidden'));
+            }
+        }
+
+        // Select Defect for detailed explanation
+        function selectDefect(type) {
+            currentDefect = type;
+            const data = defectDB[type];
+
+            document.getElementById('defect-title').innerHTML = `<i class="fa-solid ${data.icon}"></i> ${data.title}`;
+            document.getElementById('defect-desc').innerText = data.desc;
+            document.getElementById('rgb-detection-rate').innerText = data.rgbRate;
+            document.getElementById('swir-detection-rate').innerText = data.swirRate;
+            
+            const triggerText = document.getElementById('trigger-action-text');
+            triggerText.innerText = data.action;
+            triggerText.className = `text-sm font-bold ml-1 ${data.actionColor}`;
+
+            const badge = document.getElementById('defect-status-tag');
+            badge.innerText = data.badge;
+            badge.className = `px-2.5 py-0.5 rounded text-xs font-bold border ${data.badgeStyle}`;
+        }
+
+        // Slider change callback
+        function updateOpticalFilter(val) {
+            const sliderText = document.getElementById('slider-val-text');
+            if (val < 30) {
+                setInspectionMode('rgb');
+            } else if (val > 65) {
+                setInspectionMode('swir');
+            } else {
+                sliderText.innerText = `${val * 15 + 400}nm Bandpass Filter`;
+            }
+        }
+
+        // Toggle Scan Line Animation
+        function toggleScanAnimation() {
+            const scanLine = document.getElementById('scan-line-element');
+            const btn = document.getElementById('scan-toggle-btn');
+            
+            if (isScanning) {
+                scanLine.classList.add('hidden');
+                btn.innerHTML = `<i class="fa-solid fa-play text-emerald-400"></i> 라인스캔 동작`;
+                isScanning = false;
+            } else {
+                scanLine.classList.remove('hidden');
+                btn.innerHTML = `<i class="fa-solid fa-stop text-red-400"></i> 스캔 정지`;
+                isScanning = true;
+            }
+        }
+
+        // AI Pipeline Stage Toggle
+        function setAiStage(stage) {
+            aiStage = stage;
+            const btn1 = document.getElementById('btn-stage-1');
+            const btn2 = document.getElementById('btn-stage-2');
+            const card1 = document.getElementById('ai-card-stage1');
+            const card2 = document.getElementById('ai-card-stage2');
+
+            if (stage === 1) {
+                btn1.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-indigo-600 text-white";
+                btn2.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white";
+                card1.className = "p-5 rounded-xl bg-slate-950 border-2 border-indigo-500/80 transition-all space-y-3";
+                card2.className = "p-5 rounded-xl bg-slate-950 border border-slate-800 opacity-60 transition-all space-y-3";
+            } else {
+                btn2.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-purple-600 text-white";
+                btn1.className = "px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white";
+                card2.className = "p-5 rounded-xl bg-slate-950 border-2 border-purple-500/80 transition-all space-y-3";
+                card1.className = "p-5 rounded-xl bg-slate-950 border border-slate-800 opacity-60 transition-all space-y-3";
+            }
+        }
+
+        // ROI Calculator Logic
+        function calculateROI() {
+            const throughput = parseFloat(document.getElementById('input-throughput').value);
+            const defectRate = parseFloat(document.getElementById('input-defect-rate').value) / 100;
+            const reworkRate = parseFloat(document.getElementById('input-rework-rate').value) / 100;
+
+            // UI Label updates
+            document.getElementById('val-throughput').innerText = `${throughput.toLocaleString()} 매`;
+            document.getElementById('val-defect-rate').innerText = `${(defectRate * 100).toFixed(1)} %`;
+            document.getElementById('val-rework-rate').innerText = `${(reworkRate * 100).toFixed(0)} %`;
+
+            // Math calculations
+            const dailyDefects = throughput * defectRate;
+            const dailyRecovered = dailyDefects * reworkRate;
+            const yearlyRecovered = Math.round(dailyRecovered * 365);
+
+            const waferCostUSD = 1200; // $1,200 per wafer
+            const yearlySavingsUSD = yearlyRecovered * waferCostUSD;
+            const yieldBoostPercent = ((yearlyRecovered / (throughput * 365)) * 100).toFixed(2);
+
+            // Display Results
+            document.getElementById('res-recovered-wafers').innerText = `${yearlyRecovered.toLocaleString()} 매`;
+            document.getElementById('res-yield-boost').innerText = `+ ${yieldBoostPercent} %p`;
+            
+            const krwBillion = (yearlySavingsUSD * 1320 / 100000000).toFixed(0);
+            document.getElementById('res-cost-savings').innerHTML = `$ ${yearlySavingsUSD.toLocaleString()} <span class="text-sm font-normal text-slate-400">(약 ${krwBillion}억 원)</span>`;
+        }
+
+        // Initialize on Load
+        window.onload = function() {
+            setInspectionMode('rgb');
+            selectDefect('stain');
+            calculateROI();
+        };
+    </script>
+</body>
+</html>
