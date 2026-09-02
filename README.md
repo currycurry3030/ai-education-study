@@ -28,6 +28,7 @@
 - `[딥리서치 1] 메모리 및 로봇 기술 인사이트.docx`
 - `[딥리서치 2] AI 스마트폰 런칭 기획안.docx`
 - `프롬프트_CopyBook.html` — 프롬프트 복사북
+- `Gemini_인증용_계정안내.html` — 교육용 제미나이 계정 안내 (**credentials 포함 — .gitignore로 git 추적 제외**)
 - `workflow_samples/` — 챕터 5 실습 산출물 예시 (docx/html/pdf)
 
 ## 사용법
