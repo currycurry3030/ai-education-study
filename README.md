@@ -41,6 +41,9 @@ python3 scripts/extract_pdfs.py
 
 ## 학습 방법
 
-1. `markdown/N_*.md` 파일을 챕터 순서대로 읽는다.
-2. 이해/요점을 `notes/N_챕터명.md`에 기록한다.
-3. 챕터 5 실습은 `workflow_samples/` 산출물을 참고해 동일 워크플로 재현을 목표로 한다.
+전체 학습 순서는 `notes/00b_학습방법_가이드.md` 참고. 요약하면:
+1. `README.md` + `notes/00_학습계획.md`로 전체 그림 파악
+2. `notes/1_...md` ~ `notes/6_...md` 순서대로 챕터 요약 학습
+3. `notes/7~10_부록_*.md`로 심화 학습 (선택)
+4. `notes/실행가이드_챕터5_workflow실습.md`, `notes/실행가이드_챕터6_미션7_Gem제작.md`로 실제 브라우저 실습
+5. `notes/00_학습계획.md` 체크리스트 갱신
