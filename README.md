@@ -5,7 +5,6 @@
 ## 디렉터리 구조
 
 - `source/` — 원본 자료 사본 (PDF 6개 교안은 원본 위치에서 직접 추출)
-  - `chapter_pdfs/` — "Chapter1~6 전체 교안 PDF.zip" 압축 해제본 (파일명 인코딩 깨짐 있음, 원본 PDF와 동일 내용)
   - `workflow_samples/` — "AI활용Workflow_산출물_샘플.zip" 압축 해제본
 - `markdown/` — 교안 PDF에서 추출한 전체 텍스트 (페이지 번호 주석 포함)
 - `notes/` — 챕터별 학습 노트 (학습하며 작성)

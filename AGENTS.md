@@ -12,8 +12,7 @@
 ## 디렉터리 구조
 
 ```
-source/         원본 자료 사본 (PDF 6종 원본 위치 참조, zip 압축 해제본, docx/html 부록)
-  chapter_pdfs/    "Chapter1~6 전체 교안 PDF.zip" 해제본 — 파일명 인코딩 깨짐 있음(원본 PDF와 동일 내용, 사용 안 함)
+source/         원본 자료 사본 (PDF 6종 원본 위치 참조, docx/html 부록)
   workflow_samples/ 챕터5 실습 산출물 예시 (docx/html/pdf)
 markdown/        교안 PDF → 텍스트 추출 결과 (scripts/extract_pdfs.py 산출물)
 notes/           챕터별/부록별 핵심 요약 노트 + 실행 가이드 (사람이 학습하는 핵심 자료)
@@ -42,5 +41,4 @@ scripts/         PDF↔MD↔PDF 변환 스크립트
 
 ## 하지 말 것
 
-- `source/chapter_pdfs/`의 깨진 파일명 PDF를 참조하지 말 것 (원본 PDF와 100% 동일 내용, `source/` 상위 실제 원본 경로 사용).
 - notes 파일을 대량 재작성하지 말 것 — 기존 노트는 `patch`로 섹션 단위 보강, 신규 주제만 새 파일 생성.
